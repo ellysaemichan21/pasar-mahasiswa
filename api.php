@@ -162,6 +162,15 @@ switch ($action) {
         echo json_encode(['success' => true]);
         break;
 
+    case 'get_services':
+        $rows = $pdo->query("SELECT * FROM services ORDER BY id DESC")->fetchAll();
+        foreach ($rows as &$r) {
+            $r['id'] = (int)$r['id'];
+            $r['price'] = (int)$r['price'];
+        }
+        echo json_encode(['success' => true, 'services' => $rows]);
+        break;
+
     case 'get_products':
         $stmt = $pdo->query("
             SELECT p.*, u.ktp_status AS seller_ktp_status
@@ -341,7 +350,34 @@ switch ($action) {
             unset($u['ktp_path']);
         }
         $orders = $pdo->query("SELECT * FROM orders ORDER BY id DESC")->fetchAll();
-        echo json_encode(['success' => true, 'products' => $products, 'users' => $users, 'orders' => $orders]);
+        $services = $pdo->query("SELECT * FROM services ORDER BY id DESC")->fetchAll();
+        echo json_encode(['success' => true, 'products' => $products, 'users' => $users, 'orders' => $orders, 'services' => $services]);
+        break;
+
+    case 'admin_create_service':
+        $admin = getCurrentUser($pdo);
+        if (!$admin || $admin['role'] !== 'admin') { http_response_code(403); exit; }
+        $title = trim($json['title'] ?? '');
+        $cat = trim($json['category'] ?? 'Software & OS');
+        $price = (int)($json['price'] ?? 0);
+        $duration = trim($json['duration'] ?? '1-2 Jam');
+        $tech = trim($json['technician'] ?? 'Tim IT ILKOM');
+        $desc = trim($json['description'] ?? '');
+        if ($title === '' || $price <= 0) {
+            echo json_encode(['success' => false, 'message' => 'Nama layanan dan tarif wajib diisi.']);
+            exit;
+        }
+        $stmt = $pdo->prepare("INSERT INTO services (title, category, price, duration, technician, description) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$title, $cat, $price, $duration, $tech, $desc]);
+        echo json_encode(['success' => true]);
+        break;
+
+    case 'admin_delete_service':
+        $admin = getCurrentUser($pdo);
+        if (!$admin || $admin['role'] !== 'admin') { http_response_code(403); exit; }
+        $sid = (int)($json['id'] ?? 0);
+        $pdo->prepare("DELETE FROM services WHERE id = ?")->execute([$sid]);
+        echo json_encode(['success' => true]);
         break;
 
     case 'admin_verify_ktp':

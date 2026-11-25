@@ -546,7 +546,7 @@ let appState = {
   currentView: 'home', // home | catalog | detail | titip | dashboard | services
   selectedItemId: 1,
   products: [],
-  services: [...initialServices],
+  services: [],
   serviceFilter: 'Semua Jasa',
   filters: {
     category: 'Semua',
@@ -810,6 +810,28 @@ function ensureStudioAttribution() {
   }
 }
 
+async function loadServicesFromApi() {
+  try {
+    const res = await fetch(`${API_URL}?action=get_services`);
+    const data = await res.json();
+    if (data.success && Array.isArray(data.services)) {
+      appState.services = data.services.map(s => ({
+        id: Number(s.id),
+        title: s.title,
+        category: s.category,
+        price: Number(s.price),
+        duration: s.duration || '1-2 Jam',
+        technician: s.technician || 'Tim IT ILKOM',
+        rating: '5.0',
+        completed: 0,
+        icon: 'wrench',
+        badge: s.badge || 'Resmi Admin',
+        description: s.description || ''
+      }));
+    }
+  } catch (e) {}
+}
+
 async function initApp() {
   ensureStudioAttribution();
   try {
@@ -829,6 +851,7 @@ async function initApp() {
     }
   } catch (e) {}
   await loadProductsFromApi();
+  await loadServicesFromApi();
   await loadMyActivity();
   updateAuthNavUI();
   renderView();
@@ -2301,11 +2324,6 @@ function getServicesViewHTML() {
                   <i data-lucide="wrench" class="w-4 h-4"></i>
                   <span>Pilih Layanan Servis</span>
                 </button>
-
-                <button onclick="openItOfferModal()" class="px-6 py-3 rounded-2xl bg-white hover:bg-slate-50 border border-[#E5DFD5] text-slate-800 font-extrabold text-xs transition flex items-center gap-2 shadow-sm hover:border-emerald-400">
-                  <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-600"></i>
-                  <span>+ Tawarkan Jasa IT-mu (Anak ILKOM)</span>
-                </button>
               </div>
             </div>
 
@@ -2359,7 +2377,13 @@ function getServicesViewHTML() {
 
         <!-- SERVICES CARDS GRID -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          ${filteredServices.map(service => getServiceCardHTML(service)).join('')}
+          ${filteredServices.length ? filteredServices.map(service => getServiceCardHTML(service)).join('') : `
+            <div class="col-span-full text-center py-14 bg-white rounded-3xl border border-[#E5DFD5] space-y-2">
+              <i data-lucide="wrench" class="w-10 h-10 text-slate-300 mx-auto"></i>
+              <h4 class="text-sm font-black text-slate-800">Belum Ada Layanan Jasa IT</h4>
+              <p class="text-xs text-slate-500 max-w-md mx-auto">Daftar layanan Jasa IT resmi akan tampil di sini setelah ditambahkan oleh Admin.</p>
+            </div>
+          `}
         </div>
 
         <!-- BOTTOM CALLOUT: KONSULTASI MASALAH LAPTOP -->

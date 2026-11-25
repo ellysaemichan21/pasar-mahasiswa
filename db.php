@@ -79,6 +79,20 @@ function ensurePasarSchema(PDO $pdo) {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     ");
 
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS services (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(200) NOT NULL,
+            category VARCHAR(80) NOT NULL DEFAULT 'Software & OS',
+            price INT NOT NULL DEFAULT 50000,
+            duration VARCHAR(80) DEFAULT '1-2 Jam',
+            technician VARCHAR(120) DEFAULT 'Tim IT ILKOM',
+            badge VARCHAR(60) DEFAULT 'Resmi Admin',
+            description TEXT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    ");
+
     // Seed default Admin account only (production: no fake students or fake products)
     try {
         $pdo->exec("ALTER TABLE products ADD COLUMN approval_status ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending' AFTER status");

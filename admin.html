@@ -72,6 +72,10 @@
           <i data-lucide="shopping-bag" class="w-4 h-4"></i>
           <span>Pesanan &amp; Jasa IT</span>
         </button>
+        <button onclick="switchTab('services')" id="nav-services" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50 whitespace-nowrap">
+          <i data-lucide="wrench" class="w-4 h-4"></i>
+          <span>Kelola Jasa IT</span>
+        </button>
       </nav>
 
       <div class="mt-auto p-4 border-t border-slate-100 hidden lg:block space-y-3">
@@ -184,6 +188,43 @@
           </table>
         </div>
       </section>
+
+      <!-- TAB 4: SERVICES (ADMIN ONLY) -->
+      <section id="tab-services" class="hidden space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4">
+          <h3 class="font-extrabold text-sm text-slate-900">Tambah Layanan Jasa IT (Khusus Admin)</h3>
+          <form onsubmit="createService(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+            <input type="text" id="srvTitle" required placeholder="Nama Layanan (cth: Install Ulang Windows 11)" class="px-3.5 py-2.5 rounded-xl border border-slate-200">
+            <select id="srvCat" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold">
+              <option value="Software &amp; OS">Software &amp; OS</option>
+              <option value="Perawatan Hardware">Perawatan Hardware</option>
+              <option value="Upgrade Hardware">Upgrade Hardware</option>
+              <option value="Troubleshooting">Troubleshooting</option>
+            </select>
+            <input type="number" id="srvPrice" required placeholder="Tarif (Rp)" class="px-3.5 py-2.5 rounded-xl border border-slate-200">
+            <input type="text" id="srvDuration" placeholder="Estimasi (cth: 1-2 Jam)" class="px-3.5 py-2.5 rounded-xl border border-slate-200">
+            <input type="text" id="srvTech" placeholder="Teknisi (cth: Tim IT ILKOM)" class="px-3.5 py-2.5 rounded-xl border border-slate-200">
+            <button type="submit" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold">Tambah Layanan</button>
+            <textarea id="srvDesc" rows="2" placeholder="Deskripsi singkat layanan..." class="sm:col-span-2 lg:col-span-3 px-3.5 py-2 rounded-xl border border-slate-200"></textarea>
+          </form>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-500 uppercase font-bold border-b border-slate-200">
+                <tr>
+                  <th class="px-4 py-3">Layanan</th>
+                  <th class="px-4 py-3">Kategori</th>
+                  <th class="px-4 py-3">Tarif</th>
+                  <th class="px-4 py-3">Teknisi</th>
+                  <th class="px-4 py-3 text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="servicesTbody" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 
@@ -247,14 +288,14 @@
     }
 
     function switchTab(tab) {
-      ['products', 'sellers', 'orders'].forEach(t => {
+      ['products', 'sellers', 'orders', 'services'].forEach(t => {
         document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tab);
         const btn = document.getElementById(`nav-${t}`);
         btn.className = t === tab
           ? 'flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/80 whitespace-nowrap'
           : 'flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50 whitespace-nowrap';
       });
-      const titles = { products: 'Kelola Barang', sellers: 'Verifikasi KTP Penjual', orders: 'Pesanan & Jasa IT' };
+      const titles = { products: 'Kelola Barang', sellers: 'Verifikasi KTP Penjual', orders: 'Pesanan & Jasa IT', services: 'Kelola Jasa IT (Admin)' };
       document.getElementById('pageTitle').textContent = titles[tab];
     }
 
@@ -270,6 +311,7 @@
       renderProductsTable();
       renderSellersTable();
       renderOrdersTable();
+      renderServicesTable();
       lucide.createIcons();
     }
 
@@ -366,6 +408,51 @@
             </select>
           </td>
         </tr>`).join('');
+    }
+
+    function renderServicesTable() {
+      const rows = cache.services || [];
+      document.getElementById('servicesTbody').innerHTML = rows.length ? rows.map(s => `
+        <tr class="hover:bg-slate-50/80">
+          <td class="px-4 py-3 font-bold text-slate-900">${s.title}<div class="text-[10px] text-slate-400 font-normal">${s.duration || ''}</div></td>
+          <td class="px-4 py-3">${s.category}</td>
+          <td class="px-4 py-3 font-bold text-emerald-700">Rp ${Number(s.price).toLocaleString('id-ID')}</td>
+          <td class="px-4 py-3">${s.technician}</td>
+          <td class="px-4 py-3 text-right">
+            <button onclick="deleteService(${s.id})" class="text-red-500 hover:text-red-700 font-bold px-2 py-1 rounded hover:bg-red-50">Hapus</button>
+          </td>
+        </tr>`).join('') : '<tr><td colspan="5" class="px-4 py-6 text-center text-slate-400">Belum ada layanan Jasa IT. Tambahkan dari form di atas.</td></tr>';
+    }
+
+    async function createService(e) {
+      e.preventDefault();
+      const res = await fetch(`${API}?action=admin_create_service`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: document.getElementById('srvTitle').value.trim(),
+          category: document.getElementById('srvCat').value,
+          price: document.getElementById('srvPrice').value,
+          duration: document.getElementById('srvDuration').value.trim() || '1-2 Jam',
+          technician: document.getElementById('srvTech').value.trim() || 'Tim IT ILKOM',
+          description: document.getElementById('srvDesc').value.trim()
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        e.target.reset();
+        loadOverview();
+      } else {
+        alert(data.message || 'Gagal menambah layanan.');
+      }
+    }
+
+    async function deleteService(id) {
+      if (!confirm('Hapus layanan Jasa IT ini?')) return;
+      await fetch(`${API}?action=admin_delete_service`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+      loadOverview();
     }
 
     function openKtpModal(uid, name, nik) {
