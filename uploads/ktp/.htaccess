@@ -1,0 +1,8 @@
+# Block direct public access to KTP photos; served only via authenticated Admin API
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>

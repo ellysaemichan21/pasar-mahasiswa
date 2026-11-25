@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solstice Studio | Work in Progress</title>
+    <link rel="icon" type="image/png" href="assets/images/SolsticeLogo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030917;
+        }
+        @keyframes floatSoft {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        @keyframes spinCW {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes spinCCW {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
+        }
+        .animate-float-soft { animation: floatSoft 4.5s ease-in-out infinite; }
+        .gear-cw { animation: spinCW 8s linear infinite; }
+        .gear-ccw { animation: spinCCW 5.5s linear infinite; }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+
+    <!-- FULLSCREEN SOLSTICE VIDEO BACKGROUND -->
+    <video autoplay muted loop playsinline poster="assets/images/Solstice.jpg"
+        class="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none">
+        <source src="assets/videos/SolsticeVidBackground.mp4" type="video/mp4">
+    </video>
+
+    <!-- DEEP BLUE CINEMATIC OVERLAY -->
+    <div class="fixed inset-0 bg-gradient-to-b from-[#030917]/75 via-[#071738]/55 to-[#030917]/85 backdrop-blur-[1px] z-10 pointer-events-none"></div>
+
+    <!-- FOREGROUND CONTENT -->
+    <div class="relative z-20 max-w-xl w-full text-center space-y-6">
+
+        <!-- BIG SOLSTICE LOGO -->
+        <div class="flex justify-center">
+            <img src="assets/images/SolsticeLogo.png" alt="Solstice Logo" class="w-48 h-48 sm:w-56 sm:h-56 object-contain animate-float-soft drop-shadow-[0_0_38px_rgba(96,165,250,0.6)]">
+        </div>
+
+        <!-- BIG SOLSTICE STUDIO WORDMARK -->
+        <div class="flex justify-center -mt-3">
+            <img src="assets/images/Solstice Font.png" alt="Solstice Studio" class="h-28 sm:h-36 w-auto object-contain brightness-0 invert drop-shadow-[0_6px_28px_rgba(59,130,246,0.45)]">
+        </div>
+
+        <!-- INTERLOCKING GEARS + CLEAN STATUS -->
+        <div class="inline-flex items-center gap-4 px-6 py-3.5 rounded-2xl bg-[#040c20]/70 border border-sky-400/25 backdrop-blur-xl shadow-2xl">
+            <div class="relative w-12 h-10 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-gear text-3xl text-sky-400 gear-cw absolute left-0 top-0"></i>
+                <i class="fa-solid fa-gear text-xl text-blue-300 gear-ccw absolute right-0 bottom-0"></i>
+            </div>
+            <div class="text-left">
+                <p class="text-xs font-extrabold uppercase tracking-[0.2em] text-sky-300">Work in Progress</p>
+                <p class="text-xs text-slate-200 mt-0.5">Sedang meracik sesuatu yang baru. Segera kembali!</p>
+            </div>
+        </div>
+
+        <!-- BACK BUTTON -->
+        <div class="pt-3">
+            <a href="./" class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[#071738]/75 hover:bg-sky-500/25 border border-sky-400/35 backdrop-blur-md text-slate-100 text-xs font-bold uppercase tracking-wider transition shadow-xl">
+                <i class="fa-solid fa-arrow-left text-sky-400"></i>
+                <span>Kembali ke Davina's Kitchen</span>
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>

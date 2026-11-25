@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — Pasar Mahasiswa</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #F8FAFC; color: #0F172A; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- LOGIN OVERLAY -->
+  <div id="adminLoginOverlay" class="fixed inset-0 z-50 bg-slate-900/90 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 p-8 space-y-5">
+      <div class="flex items-center gap-3">
+        <img src="logo_icon.png" alt="Logo" class="w-11 h-11 rounded-xl border border-amber-300 p-0.5 bg-white object-cover">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-widest text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">Filament-Style Panel</span>
+          <h1 class="text-xl font-extrabold text-slate-900 mt-0.5">Pasar Mahasiswa Admin</h1>
+        </div>
+      </div>
+      <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">NPM Admin</label>
+          <input type="text" id="admNpm" value="2200000001" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Kata Sandi</label>
+          <input type="password" id="admPass" placeholder="••••••••" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+        </div>
+        <p id="admErr" class="text-xs font-bold text-red-600 hidden"></p>
+        <button type="submit" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-sm shadow-lg shadow-amber-500/20 transition">
+          Masuk ke Dashboard
+        </button>
+      </form>
+      <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+        <a href="./" class="hover:text-emerald-600 font-semibold">&larr; Kembali ke Marketplace</a>
+        <span>Crafted by <a href="solstice" class="text-amber-600 hover:underline font-bold">Solstice Studio</a></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILAMENT-STYLE SHELL -->
+  <div id="adminApp" class="hidden flex-1 flex flex-col lg:flex-row">
+    <!-- Sidebar -->
+    <aside class="w-full lg:w-64 bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col shrink-0">
+      <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <img src="logo_icon.png" alt="Logo" class="w-9 h-9 rounded-xl border border-emerald-200 p-0.5 object-cover">
+          <div>
+            <p class="font-extrabold text-sm text-slate-900 leading-tight">Pasar Mahasiswa</p>
+            <p class="text-[10px] font-bold text-amber-600 uppercase tracking-wider">Admin Panel</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="p-3 space-y-1 flex lg:flex-col overflow-x-auto">
+        <button onclick="switchTab('products')" id="nav-products" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/80 whitespace-nowrap">
+          <i data-lucide="package" class="w-4 h-4"></i>
+          <span>Kelola Barang</span>
+        </button>
+        <button onclick="switchTab('sellers')" id="nav-sellers" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50 whitespace-nowrap">
+          <i data-lucide="shield-check" class="w-4 h-4"></i>
+          <span>Verifikasi KTP Penjual</span>
+        </button>
+        <button onclick="switchTab('orders')" id="nav-orders" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50 whitespace-nowrap">
+          <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+          <span>Pesanan &amp; Jasa IT</span>
+        </button>
+      </nav>
+
+      <div class="mt-auto p-4 border-t border-slate-100 hidden lg:block space-y-3">
+        <a href="./" class="flex items-center gap-2 text-xs font-bold text-emerald-700 hover:underline">
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Lihat Website Publik
+        </a>
+        <button onclick="adminLogout()" class="flex items-center gap-2 text-xs font-bold text-red-600 hover:underline">
+          <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Keluar Admin
+        </button>
+        <p class="text-[10px] text-slate-400 pt-2 border-t border-slate-100">
+          Crafted by <a href="solstice" class="text-amber-600 hover:underline font-bold">Solstice Studio</a>
+        </p>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 p-5 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
+      <!-- Top Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 id="pageTitle" class="text-2xl font-extrabold text-slate-900">Kelola Barang</h2>
+          <p class="text-xs text-slate-500">Pantau stok Titip Gudang (maks. 7 hari), Jual Mandiri, verifikasi KTP, &amp; pesanan.</p>
+        </div>
+        <button onclick="loadOverview()" class="px-4 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-xs font-bold text-slate-700 flex items-center gap-2 shadow-sm">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Refresh Data
+        </button>
+      </div>
+
+      <!-- Filament KPI Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+          <p class="text-[11px] font-bold text-slate-400 uppercase">Total Barang</p>
+          <p id="statTotalProducts" class="text-2xl font-extrabold text-slate-900 mt-1">0</p>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-sm">
+          <p class="text-[11px] font-bold text-amber-600 uppercase">Titip Gudang (7 Hari)</p>
+          <p id="statTitipGudang" class="text-2xl font-extrabold text-amber-700 mt-1">0</p>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-emerald-200/80 shadow-sm">
+          <p class="text-[11px] font-bold text-emerald-600 uppercase">Menunggu Cek KTP</p>
+          <p id="statPendingKtp" class="text-2xl font-extrabold text-emerald-700 mt-1">0</p>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+          <p class="text-[11px] font-bold text-slate-400 uppercase">Total Pesanan</p>
+          <p id="statTotalOrders" class="text-2xl font-extrabold text-slate-900 mt-1">0</p>
+        </div>
+      </div>
+
+      <!-- TAB 1: PRODUCTS -->
+      <section id="tab-products" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex gap-2">
+            <button onclick="setProductFilter('all')" id="pf-all" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white">Semua</button>
+            <button onclick="setProductFilter('titip')" id="pf-titip" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-600">Titip Gudang</button>
+            <button onclick="setProductFilter('mandiri')" id="pf-mandiri" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-600">Jual Mandiri</button>
+          </div>
+          <input type="text" id="prodSearch" oninput="renderProductsTable()" placeholder="Cari nama barang / penjual..." class="px-3.5 py-2 rounded-xl border border-slate-200 text-xs w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-amber-500">
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-500 uppercase font-bold border-b border-slate-200">
+              <tr>
+                <th class="px-4 py-3">Barang</th>
+                <th class="px-4 py-3">Penjual</th>
+                <th class="px-4 py-3">Harga</th>
+                <th class="px-4 py-3">Metode &amp; Batas</th>
+                <th class="px-4 py-3">Moderasi</th>
+                <th class="px-4 py-3">Status</th>
+                <th class="px-4 py-3 text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="productsTbody" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 2: SELLERS & KTP -->
+      <section id="tab-sellers" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-500 uppercase font-bold border-b border-slate-200">
+              <tr>
+                <th class="px-4 py-3">NPM</th>
+                <th class="px-4 py-3">Nama &amp; Jurusan</th>
+                <th class="px-4 py-3">NIK (Anti-Penipuan)</th>
+                <th class="px-4 py-3">Foto KTP</th>
+                <th class="px-4 py-3">Status</th>
+                <th class="px-4 py-3 text-right">Verifikasi</th>
+              </tr>
+            </thead>
+            <tbody id="sellersTbody" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 3: ORDERS -->
+      <section id="tab-orders" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-500 uppercase font-bold border-b border-slate-200">
+              <tr>
+                <th class="px-4 py-3">Kode</th>
+                <th class="px-4 py-3">Pembeli (NPM)</th>
+                <th class="px-4 py-3">Tipe &amp; Item</th>
+                <th class="px-4 py-3">Nominal</th>
+                <th class="px-4 py-3">Status</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTbody" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- KTP PREVIEW MODAL -->
+  <div id="ktpModal" class="fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm hidden flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div>
+          <h3 id="ktpModalTitle" class="font-extrabold text-sm text-slate-900">Foto KTP Penjual</h3>
+          <p id="ktpModalNik" class="text-xs text-slate-500 font-mono"></p>
+        </div>
+        <button onclick="document.getElementById('ktpModal').classList.add('hidden')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">&times;</button>
+      </div>
+      <img id="ktpModalImg" src="" alt="KTP" class="w-full max-h-80 object-contain rounded-xl border border-slate-200 bg-slate-50">
+    </div>
+  </div>
+
+  <script>
+    const API = 'api.php';
+    let cache = { products: [], users: [], orders: [] };
+    let prodFilter = 'all';
+
+    async function checkAdminSession() {
+      const res = await fetch(`${API}?action=me`);
+      const data = await res.json();
+      if (data.loggedIn && data.user && data.user.role === 'admin') {
+        document.getElementById('adminLoginOverlay').classList.add('hidden');
+        document.getElementById('adminApp').classList.remove('hidden');
+        loadOverview();
+      }
+      lucide.createIcons();
+    }
+    checkAdminSession();
+
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const errEl = document.getElementById('admErr');
+      errEl.classList.add('hidden');
+      const res = await fetch(`${API}?action=admin_login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          npm: document.getElementById('admNpm').value.trim(),
+          password: document.getElementById('admPass').value
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('adminLoginOverlay').classList.add('hidden');
+        document.getElementById('adminApp').classList.remove('hidden');
+        loadOverview();
+      } else {
+        errEl.textContent = data.message || 'Login gagal.';
+        errEl.classList.remove('hidden');
+      }
+    }
+
+    async function adminLogout() {
+      await fetch(`${API}?action=logout`);
+      location.reload();
+    }
+
+    function switchTab(tab) {
+      ['products', 'sellers', 'orders'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tab);
+        const btn = document.getElementById(`nav-${t}`);
+        btn.className = t === tab
+          ? 'flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/80 whitespace-nowrap'
+          : 'flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50 whitespace-nowrap';
+      });
+      const titles = { products: 'Kelola Barang', sellers: 'Verifikasi KTP Penjual', orders: 'Pesanan & Jasa IT' };
+      document.getElementById('pageTitle').textContent = titles[tab];
+    }
+
+    async function loadOverview() {
+      const res = await fetch(`${API}?action=admin_overview`);
+      const data = await res.json();
+      if (!data.success) return;
+      cache = data;
+      document.getElementById('statTotalProducts').textContent = data.products.length;
+      document.getElementById('statTitipGudang').textContent = data.products.filter(p => Number(p.is_titip_gudang) === 1).length;
+      document.getElementById('statPendingKtp').textContent = data.users.filter(u => u.ktp_status === 'pending').length;
+      document.getElementById('statTotalOrders').textContent = data.orders.length;
+      renderProductsTable();
+      renderSellersTable();
+      renderOrdersTable();
+      lucide.createIcons();
+    }
+
+    function setProductFilter(f) {
+      prodFilter = f;
+      ['all', 'titip', 'mandiri'].forEach(k => {
+        document.getElementById(`pf-${k}`).className = k === f
+          ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white'
+          : 'px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-600';
+      });
+      renderProductsTable();
+    }
+
+    function renderProductsTable() {
+      const q = (document.getElementById('prodSearch').value || '').toLowerCase();
+      const rows = cache.products.filter(p => {
+        if (prodFilter === 'titip' && Number(p.is_titip_gudang) !== 1) return false;
+        if (prodFilter === 'mandiri' && Number(p.is_titip_gudang) === 1) return false;
+        return !q || p.title.toLowerCase().includes(q) || (p.seller_name || '').toLowerCase().includes(q);
+      });
+      document.getElementById('productsTbody').innerHTML = rows.map(p => {
+        const isTitip = Number(p.is_titip_gudang) === 1;
+        const limitBadge = isTitip
+          ? (p.is_expired
+              ? `<span class="px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-bold text-[10px]">Titip Gudang &bull; Lewat 7 Hari (Kembalikan!)</span>`
+              : `<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold text-[10px]">Titip Gudang &bull; Sisa ${p.days_remaining} hari</span>`)
+          : `<span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[10px]">Jual Mandiri / COD</span>`;
+        const appBadges = {
+          pending: '<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold text-[10px]">Menunggu ACC</span>',
+          approved: '<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">Tayang</span>',
+          rejected: '<span class="px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-bold text-[10px]">Ditolak</span>'
+        };
+        return `
+          <tr class="hover:bg-slate-50/80">
+            <td class="px-4 py-3 font-bold text-slate-900">${p.title}<div class="text-[10px] text-slate-400 font-normal">${p.code} &bull; ${p.category}</div></td>
+            <td class="px-4 py-3">${p.seller_name}<div class="text-[10px] text-slate-400">${p.seller_jurusan || ''}</div></td>
+            <td class="px-4 py-3 font-bold text-emerald-700">Rp ${Number(p.price).toLocaleString('id-ID')}</td>
+            <td class="px-4 py-3">${limitBadge}</td>
+            <td class="px-4 py-3 space-y-1">
+              <div>${appBadges[p.approval_status || 'pending']}</div>
+              <div class="flex gap-1">
+                <button onclick="updateProductApproval(${p.id}, 'approved')" class="px-2 py-0.5 rounded bg-emerald-600 text-white font-bold text-[10px]">ACC</button>
+                <button onclick="updateProductApproval(${p.id}, 'rejected')" class="px-2 py-0.5 rounded bg-red-50 text-red-600 border border-red-200 font-bold text-[10px]">Tolak</button>
+              </div>
+            </td>
+            <td class="px-4 py-3">
+              <select onchange="updateProductStatus(${p.id}, this.value)" class="border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold bg-white">
+                ${['Tersedia', 'Dipesan', 'Terjual', 'Dikembalikan'].map(s => `<option value="${s}" ${p.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+              </select>
+            </td>
+            <td class="px-4 py-3 text-right">
+              <button onclick="deleteProduct(${p.id})" class="text-red-500 hover:text-red-700 font-bold px-2 py-1 rounded hover:bg-red-50">Hapus</button>
+            </td>
+          </tr>`;
+      }).join('');
+    }
+
+    function renderSellersTable() {
+      const students = cache.users.filter(u => u.role !== 'admin');
+      document.getElementById('sellersTbody').innerHTML = students.map(u => {
+        const badges = {
+          none: '<span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-bold text-[10px]">Belum Upload</span>',
+          pending: '<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold text-[10px]">Menunggu Cek</span>',
+          verified: '<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">Terverifikasi</span>',
+          rejected: '<span class="px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-bold text-[10px]">Ditolak</span>'
+        };
+        return `
+          <tr class="hover:bg-slate-50/80">
+            <td class="px-4 py-3 font-mono font-bold text-slate-900">${u.npm}</td>
+            <td class="px-4 py-3 font-bold">${u.name}<div class="text-[10px] text-slate-400 font-normal">${u.jurusan} &bull; ${u.whatsapp || '-'}</div></td>
+            <td class="px-4 py-3 font-mono">${u.nik || '-'}</td>
+            <td class="px-4 py-3">
+              ${u.has_ktp ? `<button onclick="openKtpModal(${u.id}, '${u.name}', '${u.nik || ''}')" class="px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-[10px] hover:bg-amber-600">Lihat Foto KTP</button>` : '<span class="text-slate-400">-</span>'}
+            </td>
+            <td class="px-4 py-3">${badges[u.ktp_status] || badges.none}</td>
+            <td class="px-4 py-3 text-right space-x-1">
+              ${u.has_ktp ? `<button onclick="verifyKtp(${u.id}, 'verified')" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold text-[10px]">Verifikasi</button>
+              <button onclick="verifyKtp(${u.id}, 'rejected')" class="px-2.5 py-1 rounded-lg bg-red-50 text-red-600 border border-red-200 font-bold text-[10px]">Tolak</button>` : ''}
+            </td>
+          </tr>`;
+      }).join('');
+    }
+
+    function renderOrdersTable() {
+      document.getElementById('ordersTbody').innerHTML = cache.orders.map(o => `
+        <tr class="hover:bg-slate-50/80">
+          <td class="px-4 py-3 font-mono font-bold text-slate-900">${o.order_code}</td>
+          <td class="px-4 py-3 font-bold">${o.buyer_name}<div class="text-[10px] text-slate-400 font-mono">${o.buyer_npm}</div></td>
+          <td class="px-4 py-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-bold text-[10px] mr-1">${o.order_type === 'service' ? 'Jasa IT' : 'Barang'}</span> ${o.item_title}</td>
+          <td class="px-4 py-3 font-bold text-emerald-700">Rp ${Number(o.amount).toLocaleString('id-ID')}</td>
+          <td class="px-4 py-3">
+            <select onchange="updateOrderStatus(${o.id}, this.value)" class="border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold bg-white">
+              ${['Menunggu', 'Diproses', 'Selesai', 'Dibatalkan'].map(s => `<option value="${s}" ${o.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+            </select>
+          </td>
+        </tr>`).join('');
+    }
+
+    function openKtpModal(uid, name, nik) {
+      document.getElementById('ktpModalTitle').textContent = `Foto KTP — ${name}`;
+      document.getElementById('ktpModalNik').textContent = `NIK: ${nik}`;
+      document.getElementById('ktpModalImg').src = `${API}?action=view_ktp&user_id=${uid}&t=${Date.now()}`;
+      document.getElementById('ktpModal').classList.remove('hidden');
+    }
+
+    async function verifyKtp(userId, status) {
+      await fetch(`${API}?action=admin_verify_ktp`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: userId, ktp_status: status })
+      });
+      loadOverview();
+    }
+
+    async function updateProductApproval(id, approval_status) {
+      await fetch(`${API}?action=admin_update_product`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, approval_status })
+      });
+      loadOverview();
+    }
+
+    async function updateProductStatus(id, status) {
+      await fetch(`${API}?action=admin_update_product`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status })
+      });
+      loadOverview();
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm('Hapus barang ini?')) return;
+      await fetch(`${API}?action=admin_update_product`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, delete: true })
+      });
+      loadOverview();
+    }
+
+    async function updateOrderStatus(id, status) {
+      await fetch(`${API}?action=admin_update_order`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status })
+      });
+      loadOverview();
+    }
+  </script>
+</body>
+</html>

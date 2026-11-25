@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pasar Mahasiswa — Marketplace Preloved & Jasa IT Mahasiswa</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+              950: '#052e16',
+            },
+            pastel: {
+              mint: '#a7f3d0',
+              sage: '#86efac',
+              cream: '#FBF9F5',
+              milk: '#FAF7F2',
+              card: '#FFFFFF',
+              surface: '#F4EFE6',
+              border: '#E5DFD5',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FAF7F2;
+      color: #1e293b;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FAF7F2;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D1D5DB;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #9CA3AF;
+    }
+    .hero-pattern {
+      background-color: #FAF7F2;
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(167, 243, 208, 0.45) 0%, transparent 40%),
+        radial-gradient(circle at 85% 70%, rgba(134, 239, 172, 0.35) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(244, 239, 230, 0.8) 0%, transparent 60%);
+    }
+    .card-milk {
+      background-color: #FFFFFF;
+      border: 1px solid #E5DFD5;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.035);
+    }
+    .card-milk:hover {
+      border-color: #86EFAC;
+      box-shadow: 0 10px 25px rgba(22, 163, 74, 0.08);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#FAF7F2] text-slate-800 selection:bg-emerald-200 selection:text-emerald-950">
+
+  <!-- TOP AUXILIARY BAR (Pastel Green & Milk White) -->
+  <div class="border-b border-[#E5DFD5] bg-[#F4EFE6] text-[11px] text-slate-600 py-1.5 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="hidden sm:inline font-semibold text-emerald-900">Sistem Konsinyasi Titip Gudang Kampus</span>
+        <span class="hidden sm:inline text-slate-400">&bull;</span>
+        <span class="text-slate-600">Inspeksi Fisik Transparan &bull; Bebas Ongkir COD Kampus</span>
+      </div>
+      <div class="flex items-center gap-3.5 text-xs">
+        <button onclick="showRulesModal()" class="hover:text-emerald-700 transition text-slate-600">Tentang Titip Gudang</button>
+        <span class="text-slate-300">|</span>
+        <button onclick="navigateTo('titip')" class="text-emerald-700 hover:text-emerald-800 font-bold transition flex items-center gap-1">
+          <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+          <span>Jual Barang</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN NAVIGATION BAR (Pasar Mahasiswa) -->
+  <header class="border-b border-[#E5DFD5] bg-white/95 backdrop-blur sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 gap-3 sm:gap-4">
+        
+        <!-- LOGO & BRAND: PASAR MAHASISWA -->
+        <div class="flex items-center gap-3 cursor-pointer select-none shrink-0" onclick="navigateTo('home')">
+          <img src="logo_icon.png" alt="Logo Pasar Mahasiswa" class="w-11 h-11 rounded-2xl object-cover shadow-sm border border-emerald-300 p-0.5 bg-white shrink-0 hover:scale-105 transition transform">
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-lg sm:text-xl font-black tracking-tight text-slate-900">Pasar<span class="text-emerald-600">Mahasiswa</span></span>
+              <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 uppercase tracking-wider hidden sm:inline">Preloved & IT</span>
+            </div>
+            <p class="text-[9px] text-slate-500 -mt-0.5 hidden md:block">Marketplace & Servis Laptop Kampus</p>
+          </div>
+        </div>
+
+        <!-- SEARCH BAR & SELECTORS -->
+        <div class="flex-1 min-w-0 max-w-lg hidden lg:flex items-center gap-2">
+          <!-- Category Dropdown Button -->
+          <div class="relative shrink-0">
+            <select id="headerCategorySelect" onchange="filterByCategory(this.value)" class="appearance-none bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 rounded-xl px-3 py-2 pr-7 cursor-pointer hover:border-emerald-400 focus:outline-none focus:border-emerald-600">
+              <option value="Semua">Semua Kategori</option>
+              <option value="Elektronik">Elektronik</option>
+              <option value="Perabot Kos">Perabot Kos</option>
+              <option value="Buku">Buku Kuliah</option>
+              <option value="Fashion">Fashion / Preloved</option>
+              <option value="Aksesoris">Aksesoris</option>
+              <option value="Jasa IT">🛠️ Jasa IT & Laptop</option>
+            </select>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500 absolute right-2 top-2.5 pointer-events-none"></i>
+          </div>
+
+          <!-- Input with Pastel Green Search Button -->
+          <div class="flex-1 min-w-0 flex rounded-xl overflow-hidden border border-slate-200 bg-slate-50 focus-within:border-emerald-500 focus-within:bg-white transition shadow-sm">
+            <input type="text" id="globalSearchInput" placeholder="Cari barang atau jasa IT..." class="w-full min-w-0 bg-transparent px-3.5 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none" onkeyup="if(event.key === 'Enter') handleSearch()">
+            <button onclick="handleSearch()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 shrink-0 flex items-center justify-center transition">
+              <i data-lucide="search" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- NAVIGATION ACTIONS -->
+        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+          
+          <!-- Katalog Link -->
+          <button onclick="navigateTo('catalog')" class="hidden xl:flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-bold text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition whitespace-nowrap">
+            <i data-lucide="grid" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <span>Katalog</span>
+          </button>
+
+          <!-- Jasa IT & Laptop Link (NEW!) -->
+          <button onclick="navigateTo('services')" class="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-bold text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition whitespace-nowrap">
+            <i data-lucide="wrench" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <span>Jasa IT</span>
+            <span class="px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[9px] font-black border border-emerald-300 hidden xl:inline">ILKOM</span>
+          </button>
+
+          <!-- Jual Barang Link -->
+          <button onclick="navigateTo('titip')" class="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold bg-emerald-100/80 text-emerald-800 border border-emerald-300 hover:bg-emerald-600 hover:text-white rounded-xl transition shadow-sm">
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+            <span>Jual Barang</span>
+          </button>
+
+          <!-- Dynamic Auth Area (Guest-First, No Auto-Login) -->
+          <div id="navAuthArea" class="flex items-center gap-2">
+            <button onclick="openAuthModal('login')" class="px-3.5 py-1.5 rounded-full border border-slate-200 text-xs font-bold text-slate-700 hover:text-emerald-700 hover:border-emerald-300 transition bg-white shadow-sm">
+              Masuk
+            </button>
+            <button onclick="openAuthModal('register')" class="px-3.5 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-xs font-black text-white transition shadow-md shadow-emerald-700/20">
+              Daftar
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN DYNAMIC CONTENT CONTAINER (SPA VIEWS) -->
+  <main id="app-container" class="flex-1">
+    <!-- View will be injected here via JavaScript -->
+  </main>
+
+  <!-- FOOTER (Milk White & Pastel Green) -->
+  <footer class="border-t border-[#E5DFD5] bg-[#F4EFE6] text-slate-600 py-10 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        
+        <div class="space-y-3">
+          <div class="flex items-center gap-2.5">
+            <img src="logo_icon.png" alt="Logo Pasar Mahasiswa" class="w-10 h-10 rounded-xl object-cover shadow-sm border border-emerald-300 p-0.5 bg-white">
+            <span class="text-lg font-black text-slate-900">Pasar<span class="text-emerald-600">Mahasiswa</span></span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Marketplace preloved terpercaya bagi mahasiswa untuk menjual dan membeli barang perlengkapan kos berkualitas tanpa penipuan, didukung sistem inspeksi & titip gudang aman di area kampus.
+          </p>
+          <div class="flex items-center gap-2 text-xs text-emerald-800 font-bold bg-emerald-100/70 p-2 rounded-lg border border-emerald-200">
+            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+            <span>100% Terverifikasi Kartu Tanda Mahasiswa (KTM)</span>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-sm font-black text-slate-900 uppercase tracking-wider mb-3">Model Titip Gudang</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="#" onclick="navigateTo('titip'); return false;" class="hover:text-emerald-700 transition">Cara Titip Jual Barang</a></li>
+            <li><a href="#" onclick="showRulesModal(); return false;" class="hover:text-emerald-700 transition">Ketentuan Masa Simpan 7 Hari</a></li>
+            <li><a href="#" onclick="navigateTo('catalog'); return false;" class="hover:text-emerald-700 transition">Standar Inspeksi Kelayakan</a></li>
+            <li><a href="#" onclick="showRulesModal(); return false;" class="hover:text-emerald-700 transition">Skema Komisi Layanan 10%</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-sm font-black text-slate-900 uppercase tracking-wider mb-3">Kategori Terpopuler</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="#" onclick="filterByCategory('Perabot Kos'); return false;" class="hover:text-emerald-700 transition">Meja & Kursi Belajar</a></li>
+            <li><a href="#" onclick="filterByCategory('Elektronik'); return false;" class="hover:text-emerald-700 transition">Kipas Angin & Rice Cooker</a></li>
+            <li><a href="#" onclick="filterByCategory('Buku'); return false;" class="hover:text-emerald-700 transition">Buku Diktat & Modul Kuliah</a></li>
+            <li><a href="#" onclick="filterByCategory('Elektronik'); return false;" class="hover:text-emerald-700 transition">Laptop & Aksesoris Kampus</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-sm font-black text-slate-900 uppercase tracking-wider mb-3">Titik Gudang & Hub Transit</h4>
+          <p class="text-xs text-slate-600 mb-2 leading-relaxed">
+            Gudang transit resmi berada di sekitar area kos kampus (Mudah diakses untuk survei & cek fisik langsung).
+          </p>
+          <div class="p-2.5 rounded-xl bg-white border border-[#E5DFD5] text-[11px] space-y-1 shadow-sm">
+            <div class="flex items-center gap-1.5 text-slate-800 font-bold">
+              <i data-lucide="clock" class="w-3.5 h-3.5 text-emerald-600"></i>
+              <span>Jam Operasional Gudang</span>
+            </div>
+            <p class="text-slate-600">Senin - Sabtu: 09.00 - 18.00 WIB</p>
+            <p class="text-emerald-700 font-bold">Bebas Biaya COD / Cek Fisik Langsung</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-6 border-t border-[#E5DFD5] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+        <p>&copy; 2026 Pasar Mahasiswa (Preloved &amp; Jasa IT Kampus). Crafted by <a href="solstice" class="text-emerald-700 hover:underline font-extrabold">Solstice Studio</a>.</p>
+        <p class="flex items-center gap-3 text-slate-600 font-medium">
+          <a href="admin" class="hover:text-emerald-700 font-bold underline">Admin Dashboard</a>
+          <span>&bull;</span>
+          <span class="text-emerald-700 font-bold">Opsi Titip Gudang 7 Hari</span>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- GLOBAL MODAL: BOOKING / JADWAL CEK GUDANG (Pastel White Theme) -->
+  <div id="bookingModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 w-full max-w-lg rounded-2xl p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+            <i data-lucide="calendar-check" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Jadwalkan Cek Barang di Gudang</h3>
+            <p class="text-xs text-slate-500">Kunci barang dan jadwalkan pengecekan fisik</p>
+          </div>
+        </div>
+        <button onclick="closeBookingModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Item Preview in Modal -->
+      <div id="modalItemPreview" class="p-3 bg-[#FBF9F5] rounded-xl border border-[#E5DFD5] flex gap-3 items-center">
+        <!-- Injected via JS -->
+      </div>
+
+      <form id="bookingForm" onsubmit="confirmBooking(event)" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Nama Mahasiswa (Pembeli)</label>
+          <input type="text" id="buyerName" required placeholder="Contoh: Jonathan Sidabutar" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">No. WhatsApp / HP</label>
+            <input type="tel" id="buyerPhone" required placeholder="08xxxxxxxxxx" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">NIM / Kampus</label>
+            <input type="text" id="buyerNim" required placeholder="230205xxxx (Nommensen)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Pilih Tanggal Survei</label>
+            <input type="date" id="bookingDate" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Jam Datang</label>
+            <select id="bookingTime" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition">
+              <option value="10.00 - 12.00">10.00 - 12.00 (Pagi)</option>
+              <option value="13.00 - 15.00">13.00 - 15.00 (Siang)</option>
+              <option value="16.00 - 18.00">16.00 - 18.00 (Sore)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-900 space-y-1">
+          <p class="font-bold flex items-center gap-1">
+            <i data-lucide="info" class="w-3.5 h-3.5 text-emerald-700"></i> Ketentuan Booking Gudang:
+          </p>
+          <p class="text-[11px] text-emerald-800 leading-relaxed">
+            Status barang akan dikunci menjadi <strong>Dipesan</strong> selama 24 jam. Jika pembeli tidak datang pada waktu survei yang disepakati, barang akan otomatis kembali tersedia untuk mahasiswa lain.
+          </p>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeBookingModal()" class="px-4 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 transition">
+            Batal
+          </button>
+          <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-700/20 transition flex items-center gap-1.5">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+            <span>Konfirmasi Jadwal Cek Gudang</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- GLOBAL MODAL: DECISION 7-DAY EXPIRY (Pastel White Theme) -->
+  <div id="decisionModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 w-full max-w-lg rounded-2xl p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+            <i data-lucide="clock-alert" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Masa Simpan 7 Hari Telah Selesai</h3>
+            <p class="text-xs text-slate-500">Tentukan kelanjutan penitipan barangmu di gudang</p>
+          </div>
+        </div>
+        <button onclick="closeDecisionModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div id="decisionItemPreview" class="p-3 bg-[#FBF9F5] rounded-xl border border-[#E5DFD5]">
+        <!-- Injected via JS -->
+      </div>
+
+      <p class="text-xs text-slate-600 leading-relaxed">
+        Barangmu telah melewati 7 hari periode gratis titip gudang. Sesuai kesepakatan konsinyasi awal, silakan pilih salah satu opsi di bawah:
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+        <!-- Option A: Perpanjang -->
+        <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 hover:border-emerald-400 transition cursor-pointer flex flex-col justify-between space-y-3" onclick="executeExtendStorage()">
+          <div>
+            <div class="flex items-center gap-2 text-emerald-800 font-bold text-xs mb-1">
+              <i data-lucide="refresh-cw" class="w-4 h-4 text-emerald-600"></i>
+              <span>Perpanjang Masa Titip</span>
+            </div>
+            <p class="text-[11px] text-emerald-900 leading-relaxed">
+              Titip lanjut 7 hari ke depan dengan biaya sewa slot mingguan yang sangat terjangkau.
+            </p>
+          </div>
+          <div class="pt-2 border-t border-emerald-200/80 flex items-center justify-between">
+            <span class="text-xs font-black text-emerald-800">Rp 15.000 / minggu</span>
+            <span class="text-[10px] bg-emerald-600 text-white font-bold px-2 py-0.5 rounded-lg">Pilih</span>
+          </div>
+        </div>
+
+        <!-- Option B: Ambil Kembali -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-slate-400 transition cursor-pointer flex flex-col justify-between space-y-3" onclick="executeScheduleRetrieval()">
+          <div>
+            <div class="flex items-center gap-2 text-slate-800 font-bold text-xs mb-1">
+              <i data-lucide="package-minus" class="w-4 h-4 text-slate-600"></i>
+              <span>Jadwalkan Ambil Kembali</span>
+            </div>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              Ambil kembali barang ke kos tanpa ada biaya denda keterlambatan sama sekali.
+            </p>
+          </div>
+          <div class="pt-2 border-t border-slate-200 flex items-center justify-between">
+            <span class="text-xs font-black text-slate-700">Rp 0 (Bebas Biaya)</span>
+            <span class="text-[10px] bg-slate-700 text-white font-bold px-2 py-0.5 rounded-lg">Pilih</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GLOBAL MODAL: PESAN JASA IT & LAPTOP -->
+  <div id="itBookingModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 w-full max-w-lg rounded-3xl p-6 sm:p-7 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center border border-emerald-300">
+            <i data-lucide="wrench" class="w-4 h-4 text-emerald-700"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-black text-slate-900">Form Pemesanan Jasa IT & Servis</h3>
+            <p class="text-xs text-slate-500">Ditangani langsung oleh Mahasiswa Ilmu Komputer</p>
+          </div>
+        </div>
+        <button onclick="closeItBookingModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Service Preview Box in Modal -->
+      <div id="modalItServicePreview" class="p-3.5 bg-[#FBF9F5] rounded-2xl border border-[#E5DFD5]">
+        <!-- Injected via JS -->
+      </div>
+
+      <form id="itBookingForm" onsubmit="confirmItBooking(event)" class="space-y-3.5">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nama Mahasiswa *</label>
+            <input type="text" id="itClientName" required placeholder="Contoh: Budi Santoso" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">No. WhatsApp / HP *</label>
+            <input type="tel" id="itClientPhone" required placeholder="08xxxxxxxxxx" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Program Studi / Jurusan *</label>
+            <select id="itClientMajor" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition">
+              <option value="ILKOM">ILKOM (Ilmu Komputer)</option>
+              <option value="Pendidikan Bahasa Inggris">Pendidikan Bahasa Inggris</option>
+              <option value="Pend Matematika Murni">Pend Matematika Murni</option>
+              <option value="PGSD">PGSD</option>
+              <option value="Pend Ekonomi">Pend Ekonomi</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Tipe / Merk Laptop *</label>
+            <input type="text" id="itLaptopModel" required placeholder="Contoh: Asus VivoBook 14 / ThinkPad" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Detail Keluhan / Kebutuhan *</label>
+          <textarea id="itComplaintDetails" rows="2.5" required placeholder="Contoh: Laptop blue screen saat buka Chrome, kipas berisik, butuh install Word/Excel sebelum sidang..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition"></textarea>
+        </div>
+
+        <!-- METODE PENYERAHAN -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5">Pilih Metode Penyerahan Unit *</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:border-emerald-400 transition text-xs text-slate-700">
+              <input type="radio" name="itDeliveryMethod" value="COD Kampus" checked class="text-emerald-600 focus:ring-emerald-500">
+              <span class="font-bold">COD di Kampus (Kantin / Perpus)</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:border-emerald-400 transition text-xs text-slate-700">
+              <input type="radio" name="itDeliveryMethod" value="Titip Gudang" class="text-emerald-600 focus:ring-emerald-500">
+              <span class="font-bold">Titip via Gudang Pasar Mahasiswa</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Pilih Tanggal *</label>
+            <input type="date" id="itBookingDate" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Pilih Waktu *</label>
+            <select id="itBookingTime" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition">
+              <option value="10.00 - 12.00 (Pagi)">10.00 - 12.00 (Pagi)</option>
+              <option value="13.00 - 15.00 (Siang)">13.00 - 15.00 (Siang)</option>
+              <option value="16.00 - 18.00 (Sore)">16.00 - 18.00 (Sore)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeItBookingModal()" class="px-4 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 transition">
+            Batal
+          </button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black shadow-md shadow-emerald-700/20 transition flex items-center gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>Konfirmasi Pesan Jasa</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- GLOBAL MODAL: TIKET KONFIRMASI JASA IT (Digital Receipt) -->
+  <div id="itTicketModal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white border border-emerald-300 w-full max-w-md rounded-3xl p-6 sm:p-7 shadow-2xl space-y-4 text-center">
+      <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto border-2 border-emerald-300 shadow-sm">
+        <i data-lucide="check-circle-2" class="w-8 h-8"></i>
+      </div>
+      <div>
+        <span class="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">Pesanan Diterima</span>
+        <h3 class="text-lg font-black text-slate-900 mt-1">Tiket Booking Jasa IT Berhasil!</h3>
+        <p class="text-xs text-slate-500">Teknisi mahasiswa ILKOM akan segera menghubungimu via WhatsApp.</p>
+      </div>
+
+      <div id="ticketDetailsContainer" class="p-4 rounded-2xl bg-[#FBF9F5] border border-[#E5DFD5] text-left text-xs space-y-2">
+        <!-- Injected via JS -->
+      </div>
+
+      <div class="pt-2 flex items-center justify-center gap-3">
+        <button onclick="closeItTicketModal()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black shadow-md shadow-emerald-700/20 transition w-full">
+          Selesai & Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GLOBAL MODAL: TAWARKAN JASA IT-MU (CS Student Service Submission) -->
+  <div id="itOfferModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 w-full max-w-lg rounded-3xl p-6 sm:p-7 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-2xl bg-teal-100 text-teal-800 flex items-center justify-center border border-teal-300">
+            <i data-lucide="plus-circle" class="w-4 h-4 text-teal-700"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-black text-slate-900">Tawarkan Jasa IT / Servis Baru</h3>
+            <p class="text-xs text-slate-500">Khusus Mahasiswa Ilmu Komputer (ILKOM)</p>
+          </div>
+        </div>
+        <button onclick="closeItOfferModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="itOfferForm" onsubmit="handleOfferServiceSubmit(event)" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Judul Layanan IT *</label>
+          <input type="text" id="offerTitle" required placeholder="Contoh: Instal Ulang Windows 11 + Office Lengkap" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Kategori Jasa *</label>
+            <select id="offerCategory" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition">
+              <option value="Instalasi OS & Software">Instalasi OS & Software</option>
+              <option value="Perawatan & Hardware">Perawatan & Hardware</option>
+              <option value="Upgrade & Data">Upgrade & Data</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Biaya Jasa (Rp) *</label>
+            <input type="number" id="offerPrice" required placeholder="50000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Estimasi Pengerjaan *</label>
+            <input type="text" id="offerDuration" required placeholder="Contoh: 1 - 2 Jam" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Teknisi Pengampu *</label>
+            <select id="offerTechnician" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition">
+              <option value="Andre • ILKOM">Andre • ILKOM</option>
+              <option value="Yonathan • ILKOM">Yonathan • ILKOM</option>
+              <option value="Paulus • ILKOM">Paulus • ILKOM</option>
+              <option value="Okto • ILKOM">Okto • ILKOM</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Deskripsi Layanan & Fasilitas *</label>
+          <textarea id="offerDescription" rows="3" required placeholder="Contoh: Bebas pilih OS, termasuk aktivasi resmi, bonus antivirus, backup dokumen desktop dan download..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition"></textarea>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeItOfferModal()" class="px-4 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 transition">
+            Batal
+          </button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-black shadow-md shadow-teal-700/20 transition flex items-center gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>Publikasikan Jasa ke Marketplace</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- AUTH MODAL (SIGN IN / SIGN UP WITH NPM 10 DIGIT + PASSWORD) -->
+  <div id="authModal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4" onclick="if(event.target===this)closeAuthModal()">
+    <div class="bg-white border border-[#E5DFD5] w-full max-w-md rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div>
+          <h3 id="authModalTitle" class="text-lg font-black text-slate-900">Masuk Akun Mahasiswa</h3>
+          <p class="text-[11px] text-slate-500">Gunakan NPM (10 digit, angkatan 22–26, akhiran 001–200)</p>
+        </div>
+        <button onclick="closeAuthModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-900 flex items-center justify-center font-bold">&times;</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl">
+        <button type="button" id="authTabLogin" onclick="switchAuthTab('login')" class="py-2 rounded-lg text-xs font-extrabold bg-white text-emerald-700 shadow-sm">Masuk</button>
+        <button type="button" id="authTabRegister" onclick="switchAuthTab('register')" class="py-2 rounded-lg text-xs font-extrabold text-slate-500">Daftar Baru</button>
+      </div>
+
+      <form id="authForm" onsubmit="handleAuthSubmit(event)" class="space-y-3.5">
+        <div id="registerFields" class="hidden space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap *</label>
+            <input type="text" id="authName" placeholder="Contoh: Budi Santoso" class="w-full bg-slate-50 border border-[#E5DFD5] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-emerald-600">
+          </div>
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Jurusan *</label>
+              <input type="text" id="authJurusan" placeholder="ILKOM / SI" class="w-full bg-slate-50 border border-[#E5DFD5] rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-emerald-600">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">WhatsApp *</label>
+              <input type="text" id="authWa" placeholder="08xxxxxxxxxx" class="w-full bg-slate-50 border border-[#E5DFD5] rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-emerald-600">
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">NPM (10 Digit) *</label>
+          <input type="text" id="authNpm" maxlength="10" inputmode="numeric" required placeholder="Contoh: 2302050045" class="w-full bg-slate-50 border border-[#E5DFD5] rounded-xl px-3.5 py-2.5 text-xs font-mono focus:outline-none focus:border-emerald-600">
+          <p class="text-[10px] text-slate-400 mt-1">Awalan 22–26 &bull; 3 digit terakhir maksimal 200 (001–200)</p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Kata Sandi *</label>
+          <input type="password" id="authPass" minlength="6" required placeholder="Minimal 6 karakter" class="w-full bg-slate-50 border border-[#E5DFD5] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-emerald-600">
+        </div>
+
+        <p id="authErrorMsg" class="text-xs font-bold text-red-600 hidden"></p>
+
+        <button type="submit" id="authSubmitBtn" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs transition shadow-lg">
+          Masuk Sekarang
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION COMPONENT -->
+  <div id="toastNotification" class="fixed bottom-5 right-5 z-50 transform translate-y-24 opacity-0 transition duration-300 pointer-events-none">
+    <div class="bg-white border border-[#E5DFD5] text-slate-800 px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 max-w-sm pointer-events-auto">
+      <div id="toastIcon" class="w-7 h-7 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+        <i data-lucide="check" class="w-4 h-4"></i>
+      </div>
+      <div>
+        <h5 id="toastTitle" class="text-xs font-bold text-slate-900 leading-tight">Sukses</h5>
+        <p id="toastMessage" class="text-[11px] text-slate-600 leading-tight mt-0.5">Operasi berhasil dilakukan.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICATION LOGIC & STATE STORE -->
+  <script src="app.js?v=20261125"></script>
+</body>
+</html>

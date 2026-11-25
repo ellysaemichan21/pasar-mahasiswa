@@ -1,0 +1,6 @@
+uploads/ktp/*
+!uploads/ktp/.htaccess
+uploads/products/*
+.env
+.DS_Store
+Thumbs.db

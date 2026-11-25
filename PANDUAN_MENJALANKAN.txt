@@ -1,0 +1,65 @@
+====================================================================
+PASAR MAHASISWA — MARKETPLACE PRELOVED & JASA IT MAHASISWA
+Tugas Mata Kuliah: Bisnis & Pemasaran Digital (Kelompok 2)
+====================================================================
+
+Website ini 100% STANDALONE, PORTABEL, & SIAP PAKAI TANPA DATABASE / SERVER SETUP!
+
+--------------------------------------------------------------------
+CARA MENJALANKAN WEBSITE (PILIH SALAH SATU):
+--------------------------------------------------------------------
+
+OPSI 1: LANGSUNG KE FOLDER WAMP / XAMPP (DIREKOMENDASIKAN)
+1. Copy seluruh folder "website" ini ke dalam folder web server Anda:
+   - Pengguna WampServer : C:\wamp64\www\pasarmahasiswa\
+   - Pengguna XAMPP       : C:\xampp\htdocs\pasarmahasiswa\
+2. Nyalakan WampServer atau Apache di XAMPP Control Panel.
+3. Buka browser (Chrome / Edge / Firefox) dan buka link berikut:
+   http://localhost/pasarmahasiswa/
+
+OPSI 2: LANGSUNG KLIK TANPA SERVER (OFFLINE BROWSER)
+1. Masuk ke folder "website".
+2. Klik 2x file "index.html".
+3. Website akan langsung terbuka dan berjalan normal di browser Anda.
+
+--------------------------------------------------------------------
+FITUR UTAMA YANG BISA DICOBA SAAT DEMO / PRESENTASI:
+--------------------------------------------------------------------
+
+1. Beranda (Home):
+   - Hero banner panoramik dengan counter interaktif (430 Mahasiswa, 100+ Barang).
+   - Bar Kategori Cepat dengan pill animasi "🛠️ Jasa IT & Laptop (ILKOM)".
+   - 3 Langkah Cara Kerja Konsinyasi Titip Gudang (Gratis 7 Hari Pertama).
+   - Grid "Temuan Menarik" & "Paling Banyak Dilihat" dengan penjual mahasiswa lokal (Yonathan, Andre, Paulus, Okto) dan prodi asli (ILKOM, Pend. Bahasa Inggris, Pend. Matematika Murni, PGSD, Pend. Ekonomi).
+   - Showcase Khusus: "Layanan Jasa IT & Laptop Terlaris" dengan tombol langsung ke halaman servis.
+
+2. Fitur Baru: Jasa IT & Servis Laptop (Spesialisasi Anak ILKOM):
+   - Klik menu "Jasa IT & Laptop" di navigasi atas.
+   - Filter Kategori: Semua Jasa, Instalasi OS & Software, Perawatan & Hardware, Upgrade & Data.
+   - 5 Layanan Servis Unggulan:
+     a) Install Ulang Windows 10/11 + Office Lengkap (Rp 50.000)
+     b) Cleaning Kipas & Ganti Thermal Paste Arctic MX-4 (Rp 75.000)
+     c) Install Software Kuliah SPSS, AutoCAD, Adobe, VS Code (Rp 30.000)
+     d) Jasa Pasang Upgrade SSD/RAM + Migrasi OS (Rp 60.000)
+     e) Troubleshooting Laptop Lemot & Blue Screen (Rp 45.000)
+   - Form Pemesanan Interaktif: Klik "Pesan Jasa" -> masukkan merk laptop, keluhan, pilih COD Kampus atau Drop Gudang -> Konfirmasi -> Menghasilkan Tiket Booking Digital (IT-261118-xxx).
+   - Fitur "+ Tawarkan Jasa IT-mu": Form khusus mahasiswa ILKOM untuk mempublikasikan layanan servis baru ke live state!
+
+3. Katalog Barang (Filter Real-Time):
+   - Filter barang berdasarkan Kategori, Status (Tersedia / Dipesan), Kondisi, dan Rentang Harga.
+
+4. Detail Barang & Booking Fisik Gudang:
+   - Klik salah satu barang untuk melihat galeri foto dan catatan inspeksi transparan tim gudang.
+   - Klik tombol "Pesan Barang & Jadwalkan Cek Gudang" untuk memilih jadwal survei.
+   - Status barang akan langsung otomatis berubah menjadi "DIPESAN".
+
+5. Form Pengajuan Titip Gudang:
+   - Klik tombol "Titip Gudang" di navbar.
+   - Masukkan nama barang, kategori, harga, kondisi, dan unggah foto.
+   - Tekan "Ajukan Penitipan Barang" -> barang otomatis masuk ke Ruang Penjual dengan masa aktif 7 hari!
+
+6. Ruang Penjual (Dashboard Andre • ILKOM):
+   - Klik profil "Andre" di pojok kanan atas.
+   - Sambutan: "Halo, Andre. Barang titipanmu tetap terpantau."
+   - Metrik penjualan, timer masa simpan 7 hari (Countdown Bar), dan Banner Peringatan 7 Hari Kedaluwarsa (+7 hari perpanjang atau ambil kembali).
+   - Riwayat Booking Jasa IT terintegrasi menampilkan tiket servis laptop yang telah dipesan.
