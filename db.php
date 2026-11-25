@@ -49,6 +49,7 @@ function ensurePasarSchema(PDO $pdo) {
             condition_label VARCHAR(60) NOT NULL DEFAULT 'Baik',
             status ENUM('Tersedia','Dipesan','Terjual','Dikembalikan') NOT NULL DEFAULT 'Tersedia',
             approval_status ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+            approval_reason TEXT NULL,
             is_titip_gudang TINYINT(1) NOT NULL DEFAULT 0,
             warehouse VARCHAR(160) DEFAULT NULL,
             gudang_expires_at DATETIME DEFAULT NULL,
@@ -81,6 +82,9 @@ function ensurePasarSchema(PDO $pdo) {
     // Seed default Admin account only (production: no fake students or fake products)
     try {
         $pdo->exec("ALTER TABLE products ADD COLUMN approval_status ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending' AFTER status");
+    } catch (Exception $e) {}
+    try {
+        $pdo->exec("ALTER TABLE products ADD COLUMN approval_reason TEXT NULL AFTER approval_status");
     } catch (Exception $e) {}
     $userCount = (int)$pdo->query("SELECT COUNT(*) FROM users WHERE role = 'admin'")->fetchColumn();
     if ($userCount === 0) {

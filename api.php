@@ -361,7 +361,8 @@ switch ($action) {
             $pdo->prepare("DELETE FROM products WHERE id = ?")->execute([$pid]);
         } elseif (!empty($json['approval_status'])) {
             $appStatus = in_array($json['approval_status'], ['pending', 'approved', 'rejected'], true) ? $json['approval_status'] : 'pending';
-            $pdo->prepare("UPDATE products SET approval_status = ? WHERE id = ?")->execute([$appStatus, $pid]);
+            $reason = trim((string)($json['approval_reason'] ?? ''));
+            $pdo->prepare("UPDATE products SET approval_status = ?, approval_reason = ? WHERE id = ?")->execute([$appStatus, $reason, $pid]);
         } else {
             $status = in_array($json['status'] ?? '', ['Tersedia', 'Dipesan', 'Terjual', 'Dikembalikan'], true) ? $json['status'] : 'Tersedia';
             $pdo->prepare("UPDATE products SET status = ? WHERE id = ?")->execute([$status, $pid]);

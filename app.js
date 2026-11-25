@@ -569,7 +569,9 @@ let appState = {
   activeBookingItem: null,
   activeDecisionItem: null,
   activeServiceBooking: null,
-  userBookedServices: []
+  userBookedServices: [],
+  myProducts: [],
+  myOrders: []
 };
 
 // 3. UTILITY HELPERS
@@ -632,11 +634,7 @@ function updateAuthNavUI() {
       <button onclick="openAuthModal('register')" class="px-3.5 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-xs font-black text-white transition shadow-md shadow-emerald-700/20">Daftar</button>`;
   } else {
     const initial = (u.name || 'M').charAt(0).toUpperCase();
-    const adminBtn = u.role === 'admin'
-      ? `<a href="admin" class="px-3 py-1.5 rounded-full bg-amber-500 hover:bg-amber-600 text-white text-xs font-black transition">Admin</a>`
-      : '';
     area.innerHTML = `
-      ${adminBtn}
       <button onclick="navigateTo('dashboard')" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-xs font-black text-white transition shadow-md shadow-emerald-700/20">
         <div class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-black text-white">${initial}</div>
         <span>${u.name.split(' ')[0]}</span>
@@ -716,6 +714,7 @@ async function handleAuthSubmit(e) {
     activeBookings: 0
   };
   closeAuthModal();
+  await loadMyActivity();
   updateAuthNavUI();
   showToast('Berhasil Masuk!', `Selamat datang, ${data.user.name} (${data.user.npm}).`);
   renderView();
@@ -764,6 +763,34 @@ async function loadProductsFromApi() {
   } catch (e) {}
 }
 
+async function loadMyActivity() {
+  if (!appState.currentUser) {
+    appState.myProducts = [];
+    appState.myOrders = [];
+    return;
+  }
+  try {
+    const res = await fetch(`${API_URL}?action=my_activity`);
+    const data = await res.json();
+    if (data.success) {
+      appState.myProducts = (data.my_products || []).map(p => ({
+        id: Number(p.id),
+        code: p.code,
+        title: p.title,
+        category: p.category,
+        price: Number(p.price),
+        status: p.status,
+        approvalStatus: p.approval_status || 'pending',
+        approvalReason: p.approval_reason || '',
+        isTitipGudang: Number(p.is_titip_gudang) === 1,
+        warehouse: p.warehouse || 'Jual Mandiri / COD',
+        daysRemaining: p.gudang_expires_at ? Math.max(0, Math.ceil((new Date(p.gudang_expires_at) - Date.now()) / 86400000)) : 7
+      }));
+      appState.myOrders = data.my_orders || [];
+    }
+  } catch (e) {}
+}
+
 async function initApp() {
   try {
     const meRes = await fetch(`${API_URL}?action=me`);
@@ -782,6 +809,7 @@ async function initApp() {
     }
   } catch (e) {}
   await loadProductsFromApi();
+  await loadMyActivity();
   updateAuthNavUI();
   renderView();
 }
@@ -1827,6 +1855,7 @@ async function handleConsignmentSubmit(e) {
     updateAuthNavUI();
   }
   await loadProductsFromApi();
+  await loadMyActivity();
   showToast('Barang Terbit!', data.message);
   navigateTo('dashboard');
 }
@@ -1835,15 +1864,17 @@ async function handleConsignmentSubmit(e) {
 // VIEW 5: DASHBOARD PENJUAL ("RUANG PENJUAL")
 // ==========================================
 function getDashboardViewHTML() {
-  const sellerItems = appState.products.filter(p => p.seller.name.includes(appState.userProfile.name) || p.id === 9 || p.id === 4);
-  
+  const sellerItems = appState.myProducts || [];
+  const pendingCount = sellerItems.filter(i => i.approvalStatus === 'pending').length;
+  const approvedItems = sellerItems.filter(i => i.approvalStatus === 'approved');
+  const rejectedItems = sellerItems.filter(i => i.approvalStatus === 'rejected');
+
   const totalDititipkan = sellerItems.length;
-  const totalTersedia = sellerItems.filter(i => i.status === 'Tersedia').length;
+  const totalTersedia = sellerItems.filter(i => i.status === 'Tersedia' && i.approvalStatus === 'approved').length;
   const totalDipesan = sellerItems.filter(i => i.status === 'Dipesan').length;
-  const totalTerjual = sellerItems.filter(i => i.status === 'Terjual').length;
 
   // Check for 7-day alert item (item with daysRemaining <= 0)
-  const expiredItem = sellerItems.find(i => i.daysRemaining <= 0);
+  const expiredItem = sellerItems.find(i => i.isTitipGudang && i.daysRemaining <= 0);
 
   return `
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -1851,16 +1882,44 @@ function getDashboardViewHTML() {
       <!-- SELLER HEADER -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E5DFD5]">
         <div>
-          <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest">Ruang Penjual & Consignment Hub</span>
-          <h1 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">Halo, ${appState.userProfile.name}. Barang titipanmu tetap terpantau.</h1>
-          <p class="text-xs text-slate-400">Pantau masa simpan 7 hari, status pesanan, dan pencairan hasil penjualan ke rekeningmu.</p>
+          <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest">Profil &amp; Ruang Penjual</span>
+          <h1 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">Halo, ${appState.userProfile.name} (${appState.userProfile.nim || '-'}).</h1>
+          <p class="text-xs text-slate-500">Pantau status peninjauan Admin, notifikasi persetujuan/penolakan, &amp; masa simpan 7 hari.</p>
         </div>
 
-        <button onclick="navigateTo('titip')" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-slate-900 font-bold text-xs shrink-0 transition flex items-center gap-2 shadow-lg shadow-cyan-950/30">
+        <button onclick="navigateTo('titip')" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shrink-0 transition flex items-center gap-2 shadow-lg">
           <i data-lucide="plus" class="w-4 h-4"></i>
-          <span>Titip Barang Baru</span>
+          <span>Jual Barang Baru</span>
         </button>
       </div>
+
+      <!-- SELLER MODERATION NOTIFICATIONS -->
+      ${pendingCount > 0 ? `
+        <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 flex items-start gap-3 text-xs text-amber-900">
+          <i data-lucide="clock" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5"></i>
+          <div>
+            <strong class="block text-sm">Ada ${pendingCount} barang sedang ditinjau Admin</strong>
+            <span>Data barang dan verifikasi KTP kamu sedang diperiksa oleh Admin. Barang akan otomatis tayang di marketplace setelah disetujui.</span>
+          </div>
+        </div>` : ''}
+
+      ${rejectedItems.map(r => `
+        <div class="p-4 rounded-2xl bg-red-50 border border-red-200 flex items-start gap-3 text-xs text-red-900">
+          <i data-lucide="x-circle" class="w-5 h-5 text-red-600 shrink-0 mt-0.5"></i>
+          <div>
+            <strong class="block text-sm">Pengajuan Ditolak: ${r.title} (${r.code})</strong>
+            <span><strong>Alasan Admin:</strong> ${r.approvalReason || 'Data atau foto belum memenuhi syarat.'}</span>
+          </div>
+        </div>`).join('')}
+
+      ${approvedItems.length > 0 ? `
+        <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-start gap-3 text-xs text-emerald-900">
+          <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
+          <div>
+            <strong class="block text-sm">${approvedItems.length} barang telah disetujui Admin &amp; tayang!</strong>
+            <span>Barangmu sudah tampil di etalase publik Pasar Mahasiswa.</span>
+          </div>
+        </div>` : ''}
 
       <!-- 7-DAY EXPIRY ALERT BANNER (CRITICAL FEATURE) -->
       ${expiredItem ? `

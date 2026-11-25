@@ -40,7 +40,7 @@
       </form>
       <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
         <a href="./" class="hover:text-emerald-600 font-semibold">&larr; Kembali ke Marketplace</a>
-        <span>Crafted by <a href="solstice" class="text-amber-600 hover:underline font-bold">Solstice Studio</a></span>
+        <span>Main Creator: <strong>Andre</strong> &bull; <strong class="text-amber-600">Solstice Studio</strong></span>
       </div>
     </div>
   </div>
@@ -82,7 +82,7 @@
           <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Keluar Admin
         </button>
         <p class="text-[10px] text-slate-400 pt-2 border-t border-slate-100">
-          Crafted by <a href="solstice" class="text-amber-600 hover:underline font-bold">Solstice Studio</a>
+          Main Creator: <strong class="text-slate-600">Andre</strong> &bull; <strong class="text-amber-600">Solstice Studio</strong>
         </p>
       </div>
     </aside>
@@ -384,9 +384,17 @@
     }
 
     async function updateProductApproval(id, approval_status) {
+      let approval_reason = '';
+      if (approval_status === 'rejected') {
+        const input = prompt('Masukkan alasan penolakan (akan tampil di dashboard penjual):', 'Foto barang / KTP kurang jelas atau data belum sesuai');
+        if (input === null) return;
+        approval_reason = input.trim() || 'Ditolak oleh Admin';
+      } else if (approval_status === 'approved') {
+        approval_reason = 'Disetujui Admin dan sudah tayang di marketplace.';
+      }
       await fetch(`${API}?action=admin_update_product`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, approval_status })
+        body: JSON.stringify({ id, approval_status, approval_reason })
       });
       loadOverview();
     }
