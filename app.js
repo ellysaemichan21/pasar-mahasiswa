@@ -791,7 +791,27 @@ async function loadMyActivity() {
   } catch (e) {}
 }
 
+function ensureStudioAttribution() {
+  const creditText = 'Main Creator: Andre • Solstice Studio';
+  const el = document.getElementById('studio-credit');
+  if (!el || !el.textContent.includes('Solstice Studio') || !el.textContent.includes('Andre')) {
+    const footerBottom = document.querySelector('footer .border-t');
+    if (footerBottom) {
+      const p = document.createElement('p');
+      p.id = 'studio-credit';
+      p.className = 'flex items-center gap-2 text-slate-600 font-medium text-xs';
+      p.innerHTML = '<span>Main Creator: <strong class="text-slate-900">Andre</strong></span><span>&bull;</span><span class="font-extrabold text-emerald-700 tracking-wide">Solstice Studio</span>';
+      footerBottom.appendChild(p);
+    }
+  }
+  if (!window.__solsticeLogged) {
+    window.__solsticeLogged = true;
+    console.info(`%c ${creditText} `, 'background:#059669;color:#fff;font-weight:bold;padding:3px 8px;border-radius:6px;');
+  }
+}
+
 async function initApp() {
+  ensureStudioAttribution();
   try {
     const meRes = await fetch(`${API_URL}?action=me`);
     const meData = await meRes.json();
